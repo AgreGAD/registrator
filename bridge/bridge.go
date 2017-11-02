@@ -321,10 +321,10 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 		network, ok := container.NetworkSettings.Networks[networkName]
 
 		if !ok {
-			log.Println("undefined network:", networkName)
+			log.Println("undefined network: ", networkName)
 		} else {
 			service.IP = network.IPAddress
-			log.Println(service.Name + ": using network container IP for SERVICE_NETWORK option" + service.IP)
+			log.Println(service.Name + ": getting ip from " + networkName + " network " + service.IP)
 		}
 	}
 
