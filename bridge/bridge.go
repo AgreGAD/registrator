@@ -318,11 +318,12 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 
 	networkName := mapDefault(metadata, "network", "")
 	if networkName != "" {
-		networkContainer, err := b.docker.InspectContainer(networkName)
-		if err != nil {
-			log.Println("unable to inspect network container:", networkName, err)
+		network := container.NetworkSettings.Networks[networkName]
+
+		if network != nil {
+			log.Println("unable to inspect network:", networkName)
 		} else {
-			service.IP = networkContainer.NetworkSettings.IPAddress
+			service.IP = network.IPAddress
 			log.Println(service.Name + ": using network container IP for SERVICE_NETWORK option" + service.IP)
 		}
 	}
