@@ -318,9 +318,9 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 
 	networkName := mapDefault(metadata, "network", "")
 	if networkName != "" {
-		network := mapDefault(container.NetworkSettings.Networks, networkName, nil)
+		network, ok := container.NetworkSettings.Networks[networkName]
 
-		if network != nil {
+		if !ok {
 			log.Println("undefined network:", networkName)
 		} else {
 			service.IP = network.IPAddress
