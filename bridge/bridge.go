@@ -316,6 +316,17 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 		}
 	}
 
+	networkName := mapDefault(metadata, "network", "")
+	if networkName != "" {
+		networkContainer, err := b.docker.InspectContainer(networkName)
+		if err != nil {
+			log.Println("unable to inspect network container:", networkName[:12], err)
+		} else {
+			service.IP = networkContainer.NetworkSettings.IPAddress
+			log.Println(service.Name + ": using network container IP for SERVICE_NETWORK option" + service.IP)
+		}
+	}
+
 	// NetworkMode can point to another container (kuberenetes pods)
 	networkMode := container.HostConfig.NetworkMode
 	if networkMode != "" {
